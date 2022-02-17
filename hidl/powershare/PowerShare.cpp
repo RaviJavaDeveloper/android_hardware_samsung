@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "PowerShareService"
+#define LOG_TAG "powershare@1.0-service.samsung"
 
 #include "PowerShare.h"
-#include <hidl/HidlTransportSupport.h>
+#include <android-base/logging.h>
 #include <fstream>
+#include <iostream>
+#include "samsung_powershare.h"
 
 namespace vendor {
 namespace lineage {
@@ -32,34 +34,60 @@ namespace implementation {
 template <typename T>
 static void set(const std::string& path, const T& value) {
     std::ofstream file(path);
-    file << value;
+
+    if (!file) {
+        PLOG(ERROR) << "Failed to open: " << path;
+        return;
+    }
+
+    LOG(DEBUG) << "write: " << path << " value: " << value;
+
+    file << value << std::endl;
+
+    if (!file) {
+        PLOG(ERROR) << "Failed to write: " << path << " value: " << value;
+    }
 }
 
 template <typename T>
 static T get(const std::string& path, const T& def) {
     std::ifstream file(path);
+
+    if (!file) {
+        PLOG(ERROR) << "Failed to open: " << path;
+        return def;
+    }
+
     T result;
 
     file >> result;
-    return file.fail() ? def : result;
+
+    if (file.fail()) {
+        PLOG(ERROR) << "Failed to read: " << path;
+        return def;
+    } else {
+        LOG(DEBUG) << "read: " << path << " value: " << result;
+        return result;
+    }
 }
 
 Return<bool> PowerShare::isEnabled() {
-    const auto value = get<std::string>(WIRELESS_TX_ENABLE_PATH, "");
-    return !(value == "disable" || value == "0");
+    return get(POWERSHARE_PATH, 0) == 1;
 }
 
 Return<bool> PowerShare::setEnabled(bool enable) {
-    set(WIRELESS_TX_ENABLE_PATH, enable ? 1 : 0);
+    set(POWERSHARE_PATH, enable ? 1 : 0);
 
     return isEnabled();
 }
 
 Return<uint32_t> PowerShare::getMinBattery() {
-    return 0;
+    return get(POWERSHARE_STOP_CAPACITY_PATH, 0);
 }
 
-Return<uint32_t> PowerShare::setMinBattery(uint32_t) {
+Return<uint32_t> PowerShare::setMinBattery(uint32_t minBattery) {
+    set(POWERSHARE_STOP_CAPACITY_PATH, minBattery);
+
     return getMinBattery();
 }
 

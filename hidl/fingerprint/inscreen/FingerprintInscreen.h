@@ -1,14 +1,24 @@
 /*
- * Copyright (C) 2021 The LineageOS Project
- * SPDX-License-Identifier: Apache-2.0
+ * Copyright (C) 2020 The LineageOS Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 #ifndef VENDOR_LINEAGE_BIOMETRICS_FINGERPRINT_INSCREEN_V1_0_FINGERPRINTINSCREEN_H
 #define VENDOR_LINEAGE_BIOMETRICS_FINGERPRINT_INSCREEN_V1_0_FINGERPRINTINSCREEN_H
 
 #include <vendor/lineage/biometrics/fingerprint/inscreen/1.0/IFingerprintInscreen.h>
-#include <vendor/samsung/fingerprint/extension/1.0/IVendorFingerprintExtensions.h>
-#include <vendor/samsung/hardware/display/1.0/ISamsungDisplay.h>
+
+#include "samsung_fingerprint_inscreen.h"
 
 namespace vendor {
 namespace lineage {
@@ -21,8 +31,6 @@ namespace implementation {
 using ::android::sp;
 using ::android::hardware::Return;
 using ::android::hardware::Void;
-using ::vendor::samsung::fingerprint::extension::V1_0::IVendorFingerprintExtensions;
-using ::vendor::samsung::hardware::display::V1_0::ISamsungDisplay;
 
 class FingerprintInscreen : public IFingerprintInscreen {
   public:
@@ -45,11 +53,6 @@ class FingerprintInscreen : public IFingerprintInscreen {
     Return<int32_t> getSize() override;
 
   private:
-    bool mFodCircleVisible;
-
-    sp<ISamsungDisplay> mVendorDisplayService;
-    sp<IVendorFingerprintExtensions> mVendorFpService;
-
     std::mutex mCallbackLock;
     sp<IFingerprintInscreenCallback> mCallback;
 };

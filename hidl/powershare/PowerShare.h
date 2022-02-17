@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #ifndef VENDOR_LINEAGE_POWERSHARE_V1_0_POWERSHARE_H
 #define VENDOR_LINEAGE_POWERSHARE_V1_0_POWERSHARE_H
 
+#include <hidl/MQDescriptor.h>
+#include <hidl/Status.h>
 #include <vendor/lineage/powershare/1.0/IPowerShare.h>
 
 namespace vendor {
@@ -25,11 +28,17 @@ namespace V1_0 {
 namespace implementation {
 
 using ::android::sp;
+using ::android::hardware::hidl_array;
+using ::android::hardware::hidl_memory;
+using ::android::hardware::hidl_string;
+using ::android::hardware::hidl_vec;
 using ::android::hardware::Return;
 using ::android::hardware::Void;
 
-class PowerShare : public IPowerShare {
-  public:
+using ::vendor::lineage::powershare::V1_0::IPowerShare;
+
+
+struct PowerShare : public IPowerShare {
     Return<bool> isEnabled() override;
     Return<bool> setEnabled(bool enable) override;
     Return<uint32_t> getMinBattery() override;

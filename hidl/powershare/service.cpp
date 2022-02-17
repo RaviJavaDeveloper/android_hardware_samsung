@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "vendor.lineage.powershare@1.0-service.samsung"
+#define LOG_TAG "powershare@1.0-service.samsung"
 
 #include <android-base/logging.h>
 #include <hidl/HidlTransportSupport.h>
@@ -31,7 +31,7 @@ using android::OK;
 using android::status_t;
 
 int main() {
-    android::sp<IPowerShare> service = new PowerShare();
+    android::sp<PowerShare> service = new PowerShare();
 
     configureRpcThreadpool(1, true);
 
